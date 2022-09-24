@@ -62,7 +62,7 @@ def home():
 
 @app.route('/save_log', methods=['POST'])
 @auth.login_required
-def save_log():
+def save_logs():
     #this function consumes a log and saves it in a db
     global log_db
     logs_dict={}
