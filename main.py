@@ -18,7 +18,6 @@ def verify_token(token):
     if token in tokens:
         return tokens[token]
 
-
 class Log_Database:
     def __init__(self):
 
@@ -69,7 +68,10 @@ def save_logs():
 
     #get received logs and save to dict
     received_logs = request.form.to_dict(flat=False)
+    print("CURL received logs: ", received_logs)
+
     for i in received_logs:
+        print("curl logs: ", received_logs[i][0])
         logs_dict[i] = received_logs[i][0]
 
     saved_ = log_db.save_logs(logs_dict)
@@ -107,7 +109,7 @@ def get_logs():
                     log_str = log_str + j +":"+ json_logs[j] + ","
 
             log_str = log_str + " " + str(datetime.datetime.now()) + '\n'
-
+        print("curl returns: ", log_str)
         return Response( log_str, status=200, mimetype='application/json')
 
 if __name__ == "__main__":
