@@ -35,7 +35,7 @@ class Log_Database:
             sql = """ INSERT into logs (DATA) VALUES (?) """
             self.conn.execute(sql, (log_,))
             self.conn.commit()
-            return "True"
+            return True
         except Exception as e:
             saved_ = "Exception while inserting: " + e
             return saved_
@@ -71,13 +71,11 @@ def save_logs():
     received_logs = request.form.to_dict(flat=False)
     for i in received_logs:
         logs_dict[i] = received_logs[i][0]
-        
-    print("Saved logs: ", logs_dict)
 
     saved_ = log_db.save_logs(logs_dict)
 
     #check if logs are saved and send
-    if saved_ == "True":
+    if saved_ is True:
         saved_ = "Logs successfully saved to database!"
         return Response( saved_, status=200, mimetype='application/json')
     else:
@@ -96,11 +94,16 @@ def get_logs():
     print("Get logs with query: ", query_dict)
 
     logs_ = log_db.get_logs(query_dict)
-    if logs_ is not False:
-        for i in logs_:
-            for event in i:
+
+    #time complexity below is (n^^3)
+    #The third loop is to make the return values more readable
+    #therefore it can be removed to tradeoff better time complexity for readability
+
+    if logs_ != False:
+        for i in logs_: #loop 1
+            for event in i: #loop 2
                 json_logs = json.loads(event[0])
-                for j in json_logs:
+                for j in json_logs: #loop 3
                     log_str = log_str + j +":"+ json_logs[j] + ","
 
             log_str = log_str + " " + str(datetime.datetime.now()) + '\n'
