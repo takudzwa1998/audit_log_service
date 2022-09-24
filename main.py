@@ -1,10 +1,10 @@
 from urllib import response
 import flask
 import sqlite3
-from flask import request, render_template
+from flask import request, Response,render_template
 from flask_httpauth import HTTPBasicAuth
 import json
-
+import time
 
 app = flask.Flask(__name__)
 
@@ -17,67 +17,82 @@ class Log_Database:
         self.conn.execute(sql)
         self.conn.commit()
 
-    def save_logs(self, log_dict):
-        log_string = json.dumps(log_dict)
+    def save_logs(self, log_dict):#done
+        #save log as json string in logs database
+        log_ = json.dumps(log_dict)
         try:
             sql = """ INSERT into logs (DATA) VALUES (?) """
-            self.conn.execute(sql, (log_string,))
+            self.conn.execute(sql, (log_,))
             self.conn.commit()
-            return "great, added!"
+            return "True"
         except Exception as e:
             print("Exception while inserting: ", e)
-            return "not so great, not added"
+            return e
     
-    def get_logs(self, keywords):
+    def get_logs(self, keywords):#done
+        results = []
         try:
             for i in keywords:
                 print("Keyword: ", keywords[i])
                 sql = """ SELECT * FROM logs WHERE (DATA like ?) """
                 res = self.conn.execute(sql, ('%'+keywords[i]+'%',))
                 result = res.fetchall()
-                print(result)
-            return "Retrieved something, Yay!!"
+                results.append(result)
+            return results
         except Exception as e:
-            print("Exception while searching: ", e)
-            return "Nothing retrieved!! Epic Fail"
+            print("Exception while searching log: ", e)
+            return e
 
 log_db = Log_Database()
 
 @app.route('/')
 def home():
-    return "works"
+    return "This is the audit log service. Please enter your logs in a key-value JSON format."
 
 @app.route('/save_log', methods=['POST', 'GET'])
 def save_log():
+    #this function consumes a log and saves it in a db
     global log_db
     logs_dict={}
-    #this function consumes a log and saves it in a db
-    #print("req form: ", request.form.to_dict(flat=False))
+
+    #get received logs and save to dict
     received_logs = request.form.to_dict(flat=False)
     for i in received_logs:
         logs_dict[i] = received_logs[i][0]
         
-    print("saved logs: ", logs_dict)
+    print("Saved logs: ", logs_dict)
 
-    did_it_work = log_db.save_logs(logs_dict)
+    saved_ = log_db.save_logs(logs_dict)
 
-    return str(did_it_work)
+    #check if logs are saved and send
+    if saved_ == "True":
+        return Response( saved_, status=200, mimetype='application/json')
+    else:
+        return Response( saved_, status=200, mimetype='application/json')
 
 @app.route('/get_logs', methods=['POST', 'GET'])
 def get_logs():
     global log_db
     query_dict={}
-    #this function consumes a log and saves it in a db
-    #print("req form: ", request.form.to_dict(flat=False))
+    log_str =""
     query = request.form.to_dict(flat=False)
     for i in query:
         query_dict[i] = query[i][0]
         
-    print("saved logs: ", query_dict)
+    print("Get logs with query: ", query_dict)
 
-    did_it_work = log_db.get_logs(query_dict)
+    logs_ = log_db.get_logs(query_dict)
+    for i in logs_:
+        for event in i:
+            #print("event", event)
+            json_logs = json.loads(event[0])
+            #print("json_log", json_logs)
+            for j in json_logs:
+                log_str = log_str + j +":"+ json_logs[j] + ","
 
-    return str(did_it_work)
+        log_str = log_str + " " + str(time.time()) + '\n'
+
+    return Response( log_str, status=200, mimetype='application/json')
 
 if __name__ == "__main__":
     app.run(host='127.0.0.1', port=8080, debug=True)
