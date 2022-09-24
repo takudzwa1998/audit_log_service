@@ -2,11 +2,22 @@ from urllib import response
 import flask
 import sqlite3
 from flask import request, Response,render_template
-from flask_httpauth import HTTPBasicAuth
+from flask_httpauth import HTTPTokenAuth
 import json
 import time
 
 app = flask.Flask(__name__)
+auth = HTTPTokenAuth(scheme='Bearer')
+
+token_dict = open('tokens.json')
+
+tokens = json.load(token_dict)
+
+@auth.verify_token
+def verify_token(token):
+    if token in tokens:
+        return tokens[token]
+
 
 class Log_Database:
     def __init__(self):
@@ -46,10 +57,12 @@ class Log_Database:
 log_db = Log_Database()
 
 @app.route('/')
+@auth.login_required
 def home():
     return "This is the audit log service. Please enter your logs in a key-value JSON format."
 
 @app.route('/save_log', methods=['POST', 'GET'])
+@auth.login_required
 def save_log():
     #this function consumes a log and saves it in a db
     global log_db
@@ -71,6 +84,7 @@ def save_log():
         return Response( saved_, status=200, mimetype='application/json')
 
 @app.route('/get_logs', methods=['POST', 'GET'])
+@auth.login_required
 def get_logs():
     global log_db
     query_dict={}
@@ -93,6 +107,7 @@ def get_logs():
         log_str = log_str + " " + str(time.time()) + '\n'
 
     return Response( log_str, status=200, mimetype='application/json')
+
 
 if __name__ == "__main__":
     app.run(host='127.0.0.1', port=8080, debug=True)
