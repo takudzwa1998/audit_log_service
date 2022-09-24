@@ -4,7 +4,7 @@ import sqlite3
 from flask import request, Response,render_template
 from flask_httpauth import HTTPTokenAuth
 import json
-import time
+import datetime
 
 app = flask.Flask(__name__)
 auth = HTTPTokenAuth(scheme='Bearer')
@@ -37,14 +37,13 @@ class Log_Database:
             self.conn.commit()
             return "True"
         except Exception as e:
-            print("Exception while inserting: ", e)
-            return e
+            saved_ = "Exception while inserting: " + e
+            return saved_
     
     def get_logs(self, keywords):#done
         results = []
         try:
             for i in keywords:
-                print("Keyword: ", keywords[i])
                 sql = """ SELECT * FROM logs WHERE (DATA like ?) """
                 res = self.conn.execute(sql, ('%'+keywords[i]+'%',))
                 result = res.fetchall()
@@ -52,16 +51,16 @@ class Log_Database:
             return results
         except Exception as e:
             print("Exception while searching log: ", e)
-            return e
+            return False
 
 log_db = Log_Database()
 
 @app.route('/')
 @auth.login_required
 def home():
-    return "This is the audit log service. Please enter your logs in a key-value JSON format."
+    return "Welcome to the audit log service. Please enter your logs in a key-value JSON format."
 
-@app.route('/save_log', methods=['POST', 'GET'])
+@app.route('/save_log', methods=['POST'])
 @auth.login_required
 def save_log():
     #this function consumes a log and saves it in a db
@@ -79,11 +78,12 @@ def save_log():
 
     #check if logs are saved and send
     if saved_ == "True":
+        saved_ = "Logs successfully saved to database!"
         return Response( saved_, status=200, mimetype='application/json')
     else:
         return Response( saved_, status=200, mimetype='application/json')
 
-@app.route('/get_logs', methods=['POST', 'GET'])
+@app.route('/get_logs', methods=['GET'])
 @auth.login_required
 def get_logs():
     global log_db
@@ -96,18 +96,16 @@ def get_logs():
     print("Get logs with query: ", query_dict)
 
     logs_ = log_db.get_logs(query_dict)
-    for i in logs_:
-        for event in i:
-            #print("event", event)
-            json_logs = json.loads(event[0])
-            #print("json_log", json_logs)
-            for j in json_logs:
-                log_str = log_str + j +":"+ json_logs[j] + ","
+    if logs_ is not False:
+        for i in logs_:
+            for event in i:
+                json_logs = json.loads(event[0])
+                for j in json_logs:
+                    log_str = log_str + j +":"+ json_logs[j] + ","
 
-        log_str = log_str + " " + str(time.time()) + '\n'
+            log_str = log_str + " " + str(datetime.datetime.now()) + '\n'
 
-    return Response( log_str, status=200, mimetype='application/json')
-
+        return Response( log_str, status=200, mimetype='application/json')
 
 if __name__ == "__main__":
     app.run(host='127.0.0.1', port=8080, debug=True)
