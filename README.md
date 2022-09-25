@@ -33,6 +33,23 @@ The basis overview of the server is shown below.
 
 ![Basic Architecture Overview](images/Audit_Log_Service.png)
 
+The API Sequence Diagram for the log service is shown below. 
+
+![Basic Architecture Overview](images/Sequence_Diagram.png)
+
+**Software and Technologies proposed for solution**
+
+| Design Specification ID     | Solution.                                  | 
+| --------------------------- |:------------------------------------------:|
+| ALS_01                      | Use FLASK Web Framework                    | 
+| ALS_02                      | Use SQLite Database Engine                 |
+| ALS_03                      | Deploy locally through FLASK web framework |
+| ALS_04                      | Flask HTTP Token Authentication            | 
+| ALS_05                      | Deploy locally through FLASK web framework |
+
+
+
+
 
 
 
