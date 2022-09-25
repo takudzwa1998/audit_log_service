@@ -26,7 +26,7 @@ class Log_Database:
         self.conn.execute(sql)
         self.conn.commit()
 
-    def save_logs(self, log_dict):#done
+    def save_logs(self, log_dict):
         #save log as json string in logs database
         log_ = json.dumps(log_dict)
         try:
@@ -38,7 +38,7 @@ class Log_Database:
             saved_ = "Exception while inserting: " + e
             return saved_
     
-    def get_logs(self, keywords):#done
+    def get_logs(self, keywords):
         results = []
         try:
             for i in keywords:
@@ -56,21 +56,19 @@ log_db = Log_Database()
 @app.route('/')
 @auth.login_required
 def home():
-    return "Welcome to the audit log service. Please enter your logs in a key-value JSON format."
+    return "Welcome to the audit log service. Please enter your logs in standard curl key-value format i.e, \"key1=value1&key2=value2&...\" "
 
-@app.route('/save_log', methods=['POST'])
+@app.route('/save_logs', methods=['POST'])
 @auth.login_required
 def save_logs():
-    #this function consumes a log and saves it in a db
+    #this function consumes a log from the request and saves it in a db
     global log_db
     logs_dict={}
 
     #get received logs and save to dict
     received_logs = request.form.to_dict(flat=False)
-    print("CURL received logs: ", received_logs)
 
     for i in received_logs:
-        print("curl logs: ", received_logs[i][0])
         logs_dict[i] = received_logs[i][0]
 
     saved_ = log_db.save_logs(logs_dict)
@@ -85,31 +83,31 @@ def save_logs():
 @app.route('/get_logs', methods=['GET'])
 @auth.login_required
 def get_logs():
+    #this function takes a value and quiries the db for logs saved with that value
     global log_db
     query_dict={}
     log_str =""
     query = request.form.to_dict(flat=False)
     for i in query:
         query_dict[i] = query[i][0]
-        
-    print("Get logs with query: ", query_dict)
 
     logs_ = log_db.get_logs(query_dict)
 
     #time complexity below is (n^^3)
     #The third loop is to make the return values more readable
     #therefore it can be removed to tradeoff better time complexity for readability
-
     if logs_ != False:
         for i in logs_: #loop 1
             for event in i: #loop 2
                 json_logs = json.loads(event[0])
                 for j in json_logs: #loop 3
                     log_str = log_str + j +":"+ json_logs[j] + ","
-
                 log_str = log_str + '\n'
-        print("curl returns: ", log_str)
+                
         return Response( log_str, status=200, mimetype='application/json')
+    else:
+        result = "Log search failed, try again."
+        return Response( result, status=200, mimetype='application/json')
 
 if __name__ == "__main__":
     app.run(host='127.0.0.1', port=8080, debug=True)
