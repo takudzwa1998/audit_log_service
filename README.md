@@ -31,7 +31,7 @@
 
 The basis overview of the server is shown below. 
 
-![Basic Architecture Overview](images/Audit_Log_Service.png)
+![Basic Architecture Overview](images/Audit_Log_Service.png =250x250)
 
 
 
