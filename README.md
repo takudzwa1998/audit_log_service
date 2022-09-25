@@ -105,13 +105,8 @@ No curl command will successfully access the server if it is not sent with Autho
 
 
 * *Home Page* : curl -H "Authorization: Bearer token" http://127.0.0.1:8080
-* *Save Logs* : curl -X POST -H "Authorization: Bearer token" -H "Accept: application/json" http://127.0.0.1:8080/save_log -d "customer=michael&mail=michael@logmail.com"
-* *Get Logs* : curl -X GET -H "Authorization: Bearer st1" -H "Accept: application/json" http://127.0.0.1:8080/get_logs -d "customer=michael"
-
-
-
-
-
+* *Save Logs* : curl -X POST -H "Authorization: Bearer token" -H "Accept: application/json" http://127.0.0.1:8080/save_logs -d "customer=michael&mail=michael@logmail.com"
+* *Get Logs* : curl -X GET -H "Authorization: Bearer token" -H "Accept: application/json" http://127.0.0.1:8080/get_logs -d "customer=michael"
 
 
 **References**
