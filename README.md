@@ -49,8 +49,43 @@ The API Sequence Diagram for the log service is shown below.
 
 
 
+**Flask**
 
+Benefits of using Flask Web framework 
 
+* Simple, fast and easy setup and deployment of servers. 
+
+* Great solution for a small component of bigger systems, such as a system audit log service. 
+
+Limitations of using Flask 
+
+* There are better solutions for larger system web server designs e.g., Django 
+
+* Less framework support compared to other solutions e.g, Django 
+
+**SQLite**
+
+Benefits of Using SQLite Database Engine 
+
+* Flexible in terms of saving data to tables. 
+
+* Uses SQL language, which makes creating queries more smooth 
+
+* SQLite can handle http traffic; hence it can handle a lot of read/write intensive operations during the logging and retrieving of data. 
+
+Limitations of using SQLite Database Engine 
+
+* Although SQLite can handle some http traffic, the storage capacity is limited if integrated into bigger systems, making it not suitable for use on the scalability front. 
+
+To address scalability and storage issues, databases such as PostgreSQL and Oracle can be employed. 
+
+**SHORTCUTS**
+
+On the case of events having variant and invariant event content, when saving to the database, no distinguishing mechanism is in place to save them with different specifics in the database i.e., the database saves all logs in one table as a json. 
+
+However, when querying for specific information regarding event specific data, the program is able to search through and get all the logs associated with the event specific information. 
+
+Alternative – an iterative solution can be employed to append field to the tables and have each field have its own column. 
 
 
 **References**
