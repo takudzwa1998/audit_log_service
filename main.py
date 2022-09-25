@@ -1,4 +1,3 @@
-from urllib import response
 import flask
 import sqlite3
 from flask import request, Response,render_template
@@ -108,7 +107,7 @@ def get_logs():
                 for j in json_logs: #loop 3
                     log_str = log_str + j +":"+ json_logs[j] + ","
 
-            log_str = log_str + " " + str(datetime.datetime.now()) + '\n'
+                log_str = log_str + '\n'
         print("curl returns: ", log_str)
         return Response( log_str, status=200, mimetype='application/json')
 
