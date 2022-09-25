@@ -37,7 +37,7 @@ The API Sequence Diagram for the log service is shown below.
 
 ![Basic Architecture Overview](images/Sequence_Diagram.png)
 
-**Software and Technologies proposed for solution**
+## **Software and Technologies proposed for solution** ##
 
 | Design Specification ID     | Solution.                                  | 
 | --------------------------- |:------------------------------------------:|
