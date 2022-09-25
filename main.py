@@ -93,9 +93,9 @@ def get_logs():
 
     logs_ = log_db.get_logs(query_dict)
 
-    #time complexity below is (n^^3)
-    #The third loop is to make the return values more readable
-    #therefore it can be removed to tradeoff better time complexity for readability
+    #time complexity below is (n^^3).
+    #The third loop is to make the return values more readable.
+    #therefore it can be removed to tradeoff better time complexity for readability.
     if logs_ != False:
         for i in logs_: #loop 1
             for event in i: #loop 2
@@ -103,7 +103,7 @@ def get_logs():
                 for j in json_logs: #loop 3
                     log_str = log_str + j +":"+ json_logs[j] + ","
                 log_str = log_str + '\n'
-                
+
         return Response( log_str, status=200, mimetype='application/json')
     else:
         result = "Log search failed, try again."
