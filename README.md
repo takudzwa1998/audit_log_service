@@ -91,15 +91,22 @@ Alternative – an iterative solution can be employed to append field to the tab
 
 The solution can only be deployed locally. To deploy the solution, please run start.sh i.e
 
-./start.sh
+***./start.sh***
 
 There might be permission problems depending on the system securities, but the shell script is executable. If the script does not execute, please run,
 
-chmod +x start.sh ,
+***chmod +x start.sh*** ,
 
 to give the file executable status.
 
-**Testiing the solution using CURL**
+**Testing the solution using CURL**
+
+No curl command will successfully access the server if it is not sent with Authorisation headers. The user tokens can be added in to *tokens.json*. The default tokens are saved in tokens.json, and each user can use thier predetermined token to access the server. The word "token" on the below commands is to be replaced by each user token
+
+
+* *Home Page* : curl -H "Authorization: Bearer token" http://127.0.0.1:8080
+* *Save Logs* : curl -X POST -H "Authorization: Bearer token" -H "Accept: application/json" http://127.0.0.1:8080/save_log -d "customer=michael&mail=michael@logmail.com"
+* *Get Logs* : curl -X GET -H "Authorization: Bearer st1" -H "Accept: application/json" http://127.0.0.1:8080/get_logs -d "customer=michael"
 
 
 
