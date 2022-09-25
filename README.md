@@ -101,7 +101,7 @@ to give the file executable status.
 
 ## **Testing the solution using CURL** ##
 
-No curl command will successfully access the server if it is not sent with Authorisation headers. The user tokens can be added in to *tokens.json*. The default tokens are saved in tokens.json, and each user can use thier predetermined token to access the server. The word "token" on the below commands is to be replaced by each user token.
+No curl command will successfully query the server if it is not sent with Authorisation headers. The user tokens can be added in to *tokens.json*. The default tokens are saved in tokens.json, and each user can use thier predetermined token to access the server. The word "token" on the below commands is to be replaced by each user token.
 
 
 * *Home Page* : curl -H "Authorization: Bearer token" http://127.0.0.1:8080
