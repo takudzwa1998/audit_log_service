@@ -14,7 +14,7 @@
 | ALS_05        | Deploy service as HTTP Server      |
 
 
-**Design Specifications**
+## **Design Specifications** ##
 
 
 | Req Code      | Requirement                                          | 
@@ -27,7 +27,7 @@
 
 
 
-**Framework Overview**
+### **Framework Overview** ###
 
 The basis overview of the server is shown below. 
 
@@ -49,7 +49,7 @@ The API Sequence Diagram for the log service is shown below.
 
 
 
-**Flask**
+### **Flask** ###
 
 Benefits of using Flask Web framework 
 
@@ -63,7 +63,7 @@ Limitations of using Flask
 
 * Less framework support compared to other solutions e.g, Django 
 
-**SQLite**
+### **SQLite** ###
 
 Benefits of Using SQLite Database Engine 
 
@@ -79,7 +79,7 @@ Limitations of using SQLite Database Engine
 
 To address scalability and storage issues, databases such as PostgreSQL and Oracle can be employed. 
 
-**SHORTCUTS**
+### **SHORTCUTS** ###
 
 On the case of events having variant and invariant event content, when saving to the database, no distinguishing mechanism is in place to save them with different specifics in the database i.e., the database saves all logs in one table as a json. 
 
@@ -87,7 +87,7 @@ However, when querying for specific information regarding event specific data, t
 
 Alternative – an iterative solution can be employed to append field to the tables and have each field have its own column. 
 
-**Deployment Solution on Ubuntu**
+## **Deployment Solution on Ubuntu** ##
 
 The solution can only be deployed locally. To deploy the solution, please run start.sh i.e
 
@@ -99,9 +99,9 @@ There might be permission problems depending on the system securities, but the s
 
 to give the file executable status.
 
-**Testing the solution using CURL**
+## **Testing the solution using CURL** ##
 
-No curl command will successfully access the server if it is not sent with Authorisation headers. The user tokens can be added in to *tokens.json*. The default tokens are saved in tokens.json, and each user can use thier predetermined token to access the server. The word "token" on the below commands is to be replaced by each user token
+No curl command will successfully access the server if it is not sent with Authorisation headers. The user tokens can be added in to *tokens.json*. The default tokens are saved in tokens.json, and each user can use thier predetermined token to access the server. The word "token" on the below commands is to be replaced by each user token.
 
 
 * *Home Page* : curl -H "Authorization: Bearer token" http://127.0.0.1:8080
