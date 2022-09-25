@@ -87,6 +87,25 @@ However, when querying for specific information regarding event specific data, t
 
 Alternative – an iterative solution can be employed to append field to the tables and have each field have its own column. 
 
+**Deployment Solution on Ubuntu**
+
+The solution can only be deployed locally. To deploy the solution, please run start.sh i.e
+
+./start.sh
+
+There might be permission problems depending on the system securities, but the shell script is executable. If the script does not execute, please run,
+
+chmod +x start.sh ,
+
+to give the file executable status.
+
+**Testiing the solution using CURL**
+
+
+
+
+
+
 
 **References**
 
